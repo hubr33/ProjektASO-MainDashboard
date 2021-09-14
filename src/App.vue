@@ -11,6 +11,7 @@
 
     <v-main>
       <SearchClient />
+      <AddNewClient :funcTest="addNewClient" />
       <AddCarToClient />
     </v-main>
   </v-app>
@@ -18,6 +19,7 @@
 
 <script>
 import SearchClient from "./components/SearchClient";
+import AddNewClient from "./components/AddNewClient.vue";
 import AddCarToClient from "./components/AddCarToClient.vue";
 
 export default {
@@ -25,11 +27,15 @@ export default {
 
   components: {
     SearchClient,
+    AddNewClient,
     AddCarToClient,
   },
 
   data: () => ({
-    //
+    VueShowClient: {},
   }),
+  mounted() {
+    this.VueShowClient = this.coachViewContext.binding.value;
+  },
 };
 </script>

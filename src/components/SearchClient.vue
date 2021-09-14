@@ -1,12 +1,13 @@
 <template>
   <v-container>
     <v-col class="d-flex flex-column">
-      <v-form>
+      <v-form ref="form">
         <v-text-field
           class="ma-6"
           v-model="peselNumber"
           :counter="20"
           label="Numer pesel"
+          :rules="peselRules"
           required
         ></v-text-field>
         <v-btn light class="ml-6" color="info" @click="searchClient"
@@ -110,6 +111,7 @@ export default {
     selectedCar: [],
     showPeselError: false,
     showSearchedPerson: false,
+    peselRules: [(v) => !!v || "Pole jest wymagane"],
   }),
   mounted() {
     this.VueShowClient = this.coachViewContext.binding.value;
@@ -138,15 +140,20 @@ export default {
       this.coachViewContext.binding.set("value", this.VueShowClient);
       this.coachViewContext.trigger();
     },
+    validate() {
+      console.log(this.$refs.form.validate());
+      return this.$refs.form.validate();
+    },
     searchClient() {
       this.VueShowClient.searchByPesel = this.peselNumber;
       this.VueShowClient.buttonSearchClient = true;
       this.VueShowClient.buttonAddCar = false;
       this.VueShowClient.buttonAddClient = false;
       this.VueShowClient.buttonAddOrder = false;
-      this.coachViewContext.binding.set("value", this.VueShowClient);
-      this.coachViewContext.trigger();
-      this.VueShowClient = this.coachViewContext.binding.get("value");
+      this.validate();
+      // this.coachViewContext.binding.set("value", this.VueShowClient);
+      // this.coachViewContext.trigger();
+      // this.VueShowClient = this.coachViewContext.binding.get("value");
     },
     openNotificationDesc(index) {
       this.VueShowClient.carCaseid = this.VueShowClient.carAso.items[

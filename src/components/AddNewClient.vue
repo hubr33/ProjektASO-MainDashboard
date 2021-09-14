@@ -5,7 +5,7 @@
         class="ma-2 registerClient"
         v-model="typedName"
         :counter="40"
-        label="Marka"
+        label="Imię"
         required
         :rules="quantityRules"
       ></v-text-field>
@@ -13,7 +13,7 @@
         class="ma-2 registerClient"
         v-model="typedSurname"
         :counter="40"
-        label="Model (np. a4, c-klasa)"
+        label="Nazwisko"
         required
         :rules="quantityRules"
       ></v-text-field>
@@ -21,31 +21,31 @@
         class="ma-2 registerClient"
         v-model="typedCompany"
         :counter="40"
-        label="Silnik (np. 2.0l 150km Benzyna)"
+        label="Nazwa firmy"
         required
         :rules="quantityRules"
       ></v-text-field>
-      <v-select
-        v-model="value"
-        :items="gearTypes"
-        attach
-        chips
-        label="Skrzynia biegów"
+      <v-text-field
+        class="ma-2 registerClient"
+        v-model="typedPesel"
+        :counter="11"
+        label="Pesel"
+        required
         :rules="quantityRules"
-      ></v-select>
-      <v-select
-        v-model="value"
-        :items="driveType"
-        attach
-        chips
-        label="Rodzaj napędu"
+      ></v-text-field>
+      <v-text-field
+        class="ma-2 registerClient"
+        v-model="typedNip"
+        :counter="10"
+        label="NIP"
+        required
         :rules="quantityRules"
-      ></v-select>
+      ></v-text-field>
       <v-text-field
         class="ma-2 registerClient"
         v-model="typedAddress"
         :counter="40"
-        label="Rok produkcji"
+        label="Adres"
         required
         :rules="quantityRules"
       ></v-text-field>
@@ -53,7 +53,7 @@
         class="ma-2 registerClient"
         v-model="typedEmail"
         :counter="40"
-        label="Kolor"
+        label="Email"
         required
         :rules="quantityRules"
       ></v-text-field>
@@ -62,18 +62,17 @@
         :error="this.error"
         v-model="typedPhone"
         :counter="40"
-        label="Numer Vin"
+        label="Numer telefonu"
         required
         :rules="quantityRules"
       ></v-text-field>
-      <v-btn color="success" @click="addNewClient">Dodaj auto</v-btn>
+      <v-btn color="success" @click="addNewClient">Dodaj klienta</v-btn>
     </v-form>
   </v-container>
 </template>
 
 <script>
 export default {
-  props: ["funcTest"],
   data: () => ({
     VueShowClient: {},
     typedName: "",
@@ -84,13 +83,6 @@ export default {
     typedAddress: "",
     typedEmail: "",
     typedPhone: "",
-    gearTypes: [
-      "skrzynia manualna",
-      "skrzynia automatyczna stopniowa",
-      "skrzynia półautomatyczna stopniowa",
-      "skrzynia bezstopniowa",
-    ],
-    driveType: ["RWD", "4WD", "AWD", "FWD"],
     quantityRules: [
       (v) => !!v || "Pole jest wymagane",
       (v) => v !== 0 || "Liczba musi być większa od 0",
@@ -105,7 +97,12 @@ export default {
     },
     addNewClient() {
       if (this.validate()) {
-        this.funcTest();
+        this.VueShowClient.buttonSearchClient = false;
+        this.VueShowClient.buttonAddCar = false;
+        this.VueShowClient.buttonAddClient = true;
+        this.VueShowClient.buttonAddOrder = false;
+        this.coachViewContext.binding.set("value", this.VueShowClient);
+        this.coachViewContext.trigger();
         this.$refs.form.reset();
       }
     },
