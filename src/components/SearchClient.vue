@@ -87,11 +87,26 @@
                       <p>
                         VIN: <span>{{ car.vinNumber }}</span>
                       </p>
-                      <v-form
-                        ><v-btn @click="openNotificationDesc(index)"
-                          >Wyślij zgłoszenie serwisowe</v-btn
-                        ></v-form
-                      >
+                      <v-btn @click="openNotificationDesc(index)">
+                        {{
+                          issueIsVisible
+                            ? "Zamknij zgłoszenie serwisowe"
+                            : "Otwórz zgłoszenie serwisowe"
+                        }}
+                      </v-btn>
+                      <v-form v-if="issueIsVisible" ref="formIssue">
+                        <v-textarea
+                          v-if="issueIsVisible"
+                          color="black"
+                          label="Opis problemu"
+                          background-color="grey lighten-2"
+                          v-model="typedNotificationDesc"
+                          :rules="peselRules"
+                        ></v-textarea>
+                        <v-btn class="ma-6" @click="sendNewNotification"
+                          >Wyślij</v-btn
+                        >
+                      </v-form>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </v-expansion-panels>
@@ -111,6 +126,7 @@ export default {
     peselNumber: "",
     typedNotificationDesc: "",
     personDataIsVisible: false,
+    issueIsVisible: false,
     peselRules: [(v) => !!v || "Pole jest wymagane"],
   }),
   mounted() {
@@ -126,8 +142,10 @@ export default {
       this.coachViewContext.trigger();
     },
     validate() {
-      console.log(this.$refs.form.validate());
       return this.$refs.form.validate();
+    },
+    validateIssue() {
+      return this.$refs.formIssue.validate();
     },
     searchClient() {
       if (this.validate()) {
@@ -142,22 +160,33 @@ export default {
       }
     },
     openNotificationDesc(index) {
+      if (this.issueIsVisible === true) {
+        this.VueShowClient.carCaseid = "";
+        this.typedNotificationDesc = "";
+      }
+      this.issueIsVisible = !this.issueIsVisible;
       this.VueShowClient.carCaseid = this.VueShowClient.carAso.items[
         index
       ].mrcCaseHeader.caseId;
     },
     closeNotificationDesc() {
-      this.notificationDescIsVisible = false;
+      this.VueShowClient.carCaseid = "";
       this.typedNotificationDesc = "";
-      this.selectedCar = [];
     },
     sendNewNotification() {
-      this.VueShowClient.buttonSearchClient = false;
-      this.VueShowClient.buttonAddCar = false;
-      this.VueShowClient.buttonAddClient = false;
-      this.VueShowClient.buttonAddOrder = true;
-      this.coachViewContext.binding.set("value", this.VueShowClient);
-      this.coachViewContext.trigger();
+      if (this.typedNotificationDesc.length !== 0) {
+        this.VueShowClient.clientsDescription = this.typedNotificationDesc;
+        this.VueShowClient.buttonSearchClient = false;
+        this.VueShowClient.buttonAddCar = false;
+        this.VueShowClient.buttonAddClient = false;
+        this.VueShowClient.buttonAddOrder = true;
+        alert("Wysłano zgłoszenie");
+        this.coachViewContext.binding.set("value", this.VueShowClient);
+        this.coachViewContext.trigger();
+        this.typedNotificationDesc = "";
+      } else {
+        alert("Uzupełnij tekst");
+      }
     },
   },
 };
