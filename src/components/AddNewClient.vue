@@ -89,7 +89,7 @@ export default {
     ],
   }),
   mounted() {
-    this.VueShowClient = this.coachViewContext.binding.value;
+    this.VueShowClient = this.coachViewContext.binding.get("value");
   },
   methods: {
     validate() {
@@ -101,6 +101,14 @@ export default {
         this.VueShowClient.buttonAddCar = false;
         this.VueShowClient.buttonAddClient = true;
         this.VueShowClient.buttonAddOrder = false;
+        this.VueAddClient.name = this.typedName;
+        this.VueAddClient.surname = this.typedSurname;
+        this.VueAddClient.companyName = this.typedCompany;
+        this.VueAddClient.pesel = this.typedPesel;
+        this.VueAddClient.nip = this.typedNip;
+        this.VueAddClient.address = this.typedAddress;
+        this.VueAddClient.email = this.typedEmail;
+        this.VueAddClient.phoneNumber = this.typedPhone;
         this.coachViewContext.binding.set("value", this.VueShowClient);
         this.coachViewContext.trigger();
         this.$refs.form.reset();

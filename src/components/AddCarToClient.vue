@@ -3,7 +3,7 @@
     <v-form ref="form">
       <v-text-field
         class="ma-2 registerClient"
-        v-model="typedName"
+        v-model="typedBrand"
         :counter="40"
         label="Marka"
         required
@@ -11,7 +11,7 @@
       ></v-text-field>
       <v-text-field
         class="ma-2 registerClient"
-        v-model="typedSurname"
+        v-model="typedModel"
         :counter="40"
         label="Model (np. a4, c-klasa)"
         required
@@ -19,14 +19,14 @@
       ></v-text-field>
       <v-text-field
         class="ma-2 registerClient"
-        v-model="typedCompany"
+        v-model="typedEngine"
         :counter="40"
         label="Silnik (np. 2.0l 150km Benzyna)"
         required
         :rules="quantityRules"
       ></v-text-field>
       <v-select
-        v-model="value"
+        v-model="typedGear"
         :items="gearTypes"
         attach
         chips
@@ -34,7 +34,7 @@
         :rules="quantityRules"
       ></v-select>
       <v-select
-        v-model="value"
+        v-model="typedDrive"
         :items="driveType"
         attach
         chips
@@ -43,7 +43,7 @@
       ></v-select>
       <v-text-field
         class="ma-2 registerClient"
-        v-model="typedAddress"
+        v-model="typedProduction"
         :counter="40"
         label="Rok produkcji"
         required
@@ -51,7 +51,7 @@
       ></v-text-field>
       <v-text-field
         class="ma-2 registerClient"
-        v-model="typedEmail"
+        v-model="typedColor"
         :counter="40"
         label="Kolor"
         required
@@ -59,31 +59,29 @@
       ></v-text-field>
       <v-text-field
         class="ma-2 registerClient"
-        :error="this.error"
-        v-model="typedPhone"
+        v-model="typedVin"
         :counter="40"
         label="Numer Vin"
         required
         :rules="quantityRules"
       ></v-text-field>
-      <v-btn color="success" @click="addNewClient">Dodaj auto</v-btn>
+      <v-btn color="success" @click="addCarToClient">Dodaj auto</v-btn>
     </v-form>
   </v-container>
 </template>
 
 <script>
 export default {
-  props: ["funcTest"],
   data: () => ({
     VueShowClient: {},
-    typedName: "",
-    typedSurname: "",
-    typedCompany: "",
-    typedPesel: "",
-    typedNip: "",
-    typedAddress: "",
-    typedEmail: "",
-    typedPhone: "",
+    typedBrand: "",
+    typedModel: "",
+    typedEngine: "",
+    typedDrive: "",
+    typedGear: "",
+    typedProduction: "",
+    typedColor: "",
+    typedVin: "",
     gearTypes: [
       "skrzynia manualna",
       "skrzynia automatyczna stopniowa",
@@ -97,15 +95,28 @@ export default {
     ],
   }),
   mounted() {
-    this.VueShowClient = this.coachViewContext.binding.value;
+    this.VueShowClient = this.coachViewContext.binding.get("value");
   },
   methods: {
     validate() {
       return this.$refs.form.validate();
     },
-    addNewClient() {
+    addCarToClient() {
       if (this.validate()) {
-        this.funcTest();
+        this.VueShowClient.buttonSearchClient = false;
+        this.VueShowClient.buttonAddCar = true;
+        this.VueShowClient.buttonAddOrder = false;
+        this.VueShowClient.buttonAddClient = false;
+        this.VueAddCar.brand = this.typedBrand;
+        this.VueAddCar.model = this.typedModel;
+        this.VueAddCar.engineType = this.typedEngine;
+        this.VueAddCar.driveType = this.typedDrive;
+        this.VueAddCar.gearType = this.typedGear;
+        this.VueAddCar.productionYear = this.typedProduction;
+        this.VueAddCar.color = this.typedColor;
+        this.VueAddCar.vinNumber = this.typedVin;
+        this.coachViewContext.binding.set("value", this.VueShowClient);
+        this.coachViewContext.trigger();
         this.$refs.form.reset();
       }
     },
